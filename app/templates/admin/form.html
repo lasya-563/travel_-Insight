@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Add' if new else 'Edit' }} destination{% endblock %}
+{% block content %}
+<h1>{{ 'Add' if new else 'Edit' }} destination</h1>
+{% set chosen = (d.activities or '').split(';') %}
+<form method="post" class="card pad form-wide">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <div class="two">
+    <label class="field">Name<input name="name" value="{{ d.name or '' }}" required></label>
+    <label class="field">State / UT<input name="state" value="{{ d.state or '' }}" required></label>
+    <label class="field">Category
+      <select name="category">{% for c in CATEGORIES %}<option {% if c==d.category %}selected{% endif %}>{{ c }}</option>{% endfor %}</select></label>
+    <label class="field">Best season<input name="best_season" value="{{ d.best_season or '' }}" placeholder="Oct-Mar"></label>
+    <label class="field">Budget per day (₹)<input type="number" name="budget_per_day" value="{{ d.budget_per_day }}" min="100" required></label>
+    <label class="field">Rating (1–5)<input type="number" step="0.1" min="1" max="5" name="rating" value="{{ d.rating }}" required></label>
+  </div>
+  <fieldset><legend>Activities</legend>
+    <div class="chips">{% for a in ACTIVITIES %}
+      <label class="chip-select small"><input type="checkbox" name="activities" value="{{ a }}" {% if a in chosen %}checked{% endif %}><span>{{ a }}</span></label>{% endfor %}</div>
+  </fieldset>
+  <label class="field">Tags (separate with ;)<input name="tags" value="{{ d.tags or '' }}" placeholder="palaces;forts;bazaars"></label>
+  <label class="field">Description<textarea name="description" rows="3" maxlength="600">{{ d.description or '' }}</textarea></label>
+  <div class="row gap"><button class="btn">Save</button><a class="btn btn-ghost" href="{{ url_for('admin.index') }}">Cancel</a></div>
+</form>
+{% endblock %}

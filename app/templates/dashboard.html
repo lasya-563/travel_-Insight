@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Analytics dashboard{% endblock %}
+{% block content %}
+<div class="row between">
+  <h1>Tourism analytics dashboard</h1>
+  <span class="live"><i class="dot"></i> <span id="live-label">Live · updates every 10 s</span></span>
+</div>
+<p class="muted small" id="data-note"></p>
+
+<div class="kpis" id="kpis"></div>
+
+<div class="dash-grid">
+  <section class="card pad"><h3>Destinations by category</h3><div id="ch-category" class="chart"></div></section>
+  <section class="card pad"><h3>Most popular destinations</h3><p class="small muted">views + 3×ratings + 2×saves</p><div id="ch-popular" class="chart"></div></section>
+  <section class="card pad"><h3>Average rating by category</h3><div id="ch-rating" class="chart"></div></section>
+  <section class="card pad"><h3>Budget bands</h3><div id="ch-budget" class="chart"></div></section>
+  <section class="card pad wide"><h3>Visitor activity – last 14 days</h3><div id="ch-trend" class="chart"></div></section>
+  <section class="card pad"><h3>Live activity</h3><ul id="feed" class="feed"></ul></section>
+</div>
+
+<h2>Visitor segments <span class="muted small">(K-Means)</span></h2>
+<p class="muted small" id="seg-meta"></p>
+<div class="dash-grid">
+  <section class="card pad"><h3>Segment map (PCA projection)</h3><div id="ch-scatter" class="chart tall"></div></section>
+  <section class="card pad"><h3>Segment sizes</h3><div id="ch-seg-size" class="chart tall"></div></section>
+  <section class="card pad wide"><h3>Interest profile by segment (average score 0–5)</h3><div id="ch-heat" class="chart tall"></div></section>
+</div>
+<div id="seg-table" class="seg-cards"></div>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

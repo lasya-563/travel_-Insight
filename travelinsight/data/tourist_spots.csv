@@ -1,0 +1,13 @@
+id,name,city,category,tags,avg_rating,base_popularity
+1,Golconda Fort,Hyderabad,Heritage,"fort,history,architecture,sunset",4.3,72
+2,Charminar,Hyderabad,Heritage,"monument,history,shopping,architecture",4.2,85
+3,Hussain Sagar Lake,Hyderabad,Nature,"lake,boating,sunset,relaxation",4.1,68
+4,Ramoji Film City,Hyderabad,Entertainment,"theme park,family,movies,fun",4.4,90
+5,Salar Jung Museum,Hyderabad,Museum,"art,history,culture,museum",4.0,55
+6,KBR National Park,Hyderabad,Nature,"park,walking,wildlife,relaxation",4.2,48
+7,Chowmahalla Palace,Hyderabad,Heritage,"palace,history,architecture,culture",4.3,40
+8,Snow World,Hyderabad,Entertainment,"family,fun,adventure,indoor",3.9,52
+9,Birla Mandir,Hyderabad,Religious,"temple,spiritual,architecture,sunset",4.5,60
+10,Shilparamam,Hyderabad,Culture,"art,craft,culture,shopping,family",4.1,45
+11,Nehru Zoological Park,Hyderabad,Nature,"zoo,wildlife,family,park",4.0,58
+12,Golkonda Light Show,Hyderabad,Heritage,"history,evening,culture,sunset",4.2,38

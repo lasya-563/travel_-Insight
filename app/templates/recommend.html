@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Recommendations{% endblock %}
+{% block content %}
+<h1>Your recommendations</h1>
+<p class="muted">Adjust any control — results update instantly. {% if g.user %}Click “Save preferences” to keep them on your profile.{% else %}<a href="{{ url_for('auth.register') }}">Create an account</a> to save preferences and personalise with your ratings.{% endif %}</p>
+<div class="split">
+  <form id="pref-form" class="card pad sticky" autocomplete="off">
+    <fieldset>
+      <legend>Interests</legend>
+      <div class="chips">
+        {% for c in CATEGORIES %}
+        <label class="chip-select"><input type="checkbox" name="interests" value="{{ c }}" {% if c in prefs.interests %}checked{% endif %}>
+          <span>{{ ICONS[c] }} {{ c }}</span></label>{% endfor %}
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Activities</legend>
+      <div class="chips">
+        {% for a in ACTIVITIES %}
+        <label class="chip-select small"><input type="checkbox" name="activities" value="{{ a }}" {% if a in prefs.activities %}checked{% endif %}>
+          <span>{{ a }}</span></label>{% endfor %}
+      </div>
+    </fieldset>
+    <label class="field">Budget per person per day: <b id="budget-out">any</b>
+      <input type="range" id="budget" min="{{ budget_min }}" max="{{ budget_max }}" step="500" value="{{ prefs.budget or budget_max }}">
+      <label class="small"><input type="checkbox" id="budget-any" {% if not prefs.budget %}checked{% endif %}> No budget limit</label>
+    </label>
+    <label class="field">Minimum rating: <b id="rating-out">{{ prefs.min_rating }}</b>
+      <input type="range" id="min_rating" min="0" max="5" step="0.5" value="{{ prefs.min_rating }}">
+    </label>
+    <label class="field">Trip length (days)
+      <input type="number" id="trip_days" min="1" max="30" value="{{ prefs.trip_days }}">
+    </label>
+    <label class="field">Anything else? (keywords)
+      <input type="text" id="keywords" maxlength="100" placeholder="e.g. tea, palaces, tigers" value="{{ prefs.keywords }}">
+    </label>
+    <div class="row gap">
+      {% if g.user %}<button type="button" class="btn" id="save-prefs">Save preferences</button>{% endif %}
+      <button type="button" class="btn btn-ghost" id="reset">Reset</button>
+    </div>
+    <p class="small muted" id="save-msg" role="status"></p>
+  </form>
+
+  <section>
+    <div id="segment-box" class="card pad segment hidden"></div>
+    <p id="rec-status" class="muted" role="status">Loading…</p>
+    <div id="results" class="grid"></div>
+  </section>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/recommend.js') }}"></script>{% endblock %}

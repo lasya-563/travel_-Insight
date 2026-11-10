@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TravelInsight — Smart Tourism Analytics</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-top">
+    <h1>Travel<span>Insight</span></h1>
+    <p class="tag">Visitor intelligence for Hyderabad's attractions — footfall forecasting, review sentiment, and interest-based recommendations in one place.</p>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi"><div class="value" id="kpi-visitors">—</div><div class="label">Visitors, last 30 days</div></div>
+    <div class="kpi"><div class="value" id="kpi-spots">{{ spots|length }}</div><div class="label">Attractions tracked</div></div>
+    <div class="kpi"><div class="value" id="kpi-reviews">—</div><div class="label">Reviews analyzed</div></div>
+    <div class="kpi"><div class="value" id="kpi-rating">—</div><div class="label">Average rating</div></div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+  <button class="tab-btn" data-tab="predict">Predict Footfall</button>
+  <button class="tab-btn" data-tab="recommend">Recommend a Visit</button>
+  <button class="tab-btn" data-tab="reviews">Review Sentiment</button>
+</nav>
+
+<main>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashboard" class="panel-section active">
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Visitor trend — last 30 days</h3>
+        <p class="sub">Combined daily footfall across all tracked attractions</p>
+        <canvas id="trendChart" height="140"></canvas>
+      </div>
+      <div class="panel accent-gold">
+        <h3>Review sentiment</h3>
+        <p class="sub">Auto-classified from visitor review text</p>
+        <canvas id="sentimentChart" height="140"></canvas>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h3>Most-visited attractions</h3>
+        <p class="sub">Total footfall, all-time</p>
+        <canvas id="topChart" height="140"></canvas>
+      </div>
+      <div class="panel accent-gold">
+        <h3>Weather impact on turnout</h3>
+        <p class="sub">Average daily visitors by weather condition</p>
+        <canvas id="weatherChart" height="140"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PREDICT ================= -->
+  <section id="predict" class="panel-section">
+    <div class="panel">
+      <h3>Predict expected footfall</h3>
+      <p class="sub">Random-forest regression trained on 2 years of calendar, seasonal and weather data</p>
+
+      <label for="p-spot">Attraction</label>
+      <select id="p-spot">
+        {% for s in spots %}
+        <option value="{{ s.id }}">{{ s.name }}</option>
+        {% endfor %}
+      </select>
+
+      <label for="p-date">Visit date</label>
+      <input type="date" id="p-date">
+
+      <label for="p-weather">Expected weather</label>
+      <select id="p-weather">
+        <option>Sunny</option>
+        <option>Cloudy</option>
+        <option>Rainy</option>
+        <option>Hazy</option>
+      </select>
+
+      <button class="primary" onclick="runPredict()">Predict visitors</button>
+
+      <div class="result-box" id="predict-result">
+        <div class="result-headline" id="predict-number"></div>
+        <div class="result-meta" id="predict-meta"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= RECOMMEND ================= -->
+  <section id="recommend" class="panel-section">
+    <div class="panel">
+      <h3>What are you in the mood for?</h3>
+      <p class="sub">Pick a few interests — recommendations blend content similarity with recent visitor sentiment</p>
+
+      <div class="checkgroup" id="interest-chips">
+        {% for tag in ["history", "nature", "family", "architecture", "sunset", "culture", "adventure", "shopping", "spiritual"] %}
+        <span class="chip" data-tag="{{ tag }}">{{ tag }}</span>
+        {% endfor %}
+      </div>
+
+      <button class="primary" onclick="runRecommend()">Get recommendations</button>
+
+      <div id="rec-results" style="margin-top:1.4rem;"></div>
+    </div>
+  </section>
+
+  <!-- ================= REVIEWS ================= -->
+  <section id="reviews" class="panel-section">
+    <div class="panel">
+      <h3>Try the sentiment engine</h3>
+      <p class="sub">Paste or write a review — it's classified instantly and folded into the dashboard's sentiment chart</p>
+
+      <label for="review-text">Review text</label>
+      <textarea id="review-text" placeholder="e.g. The fort's light show at sunset was absolutely stunning, though parking was a bit crowded."></textarea>
+
+      <button class="primary" onclick="runSentiment()">Analyze sentiment</button>
+
+      <div class="result-box" id="sentiment-result">
+        <span class="sentiment-tag" id="sentiment-tag"></span>
+        <div class="result-meta" id="sentiment-meta"></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>TravelInsight prototype — final year project demo. Synthetic data used for footfall history and reviews.</footer>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

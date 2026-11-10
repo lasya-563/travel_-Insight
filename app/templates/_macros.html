@@ -1,0 +1,23 @@
+{% macro stars(value) -%}
+<span class="stars" title="{{ value }} / 5">★ {{ '%.1f'|format(value) }}</span>
+{%- endmacro %}
+
+{% macro card(d) %}
+<a class="card dest-card" href="{{ url_for('views.destination', dest_id=d.id) }}">
+  <div class="dest-banner" style="--c: {{ COLORS[d.category] }}">
+    <span class="dest-icon">{{ ICONS[d.category] }}</span>
+    <span class="chip chip-onc">{{ d.category }}</span>
+  </div>
+  <div class="dest-body">
+    <h3>{{ d.name }}</h3>
+    <div class="muted small">{{ d.state }} · {{ d.best_season }}</div>
+    <div class="row between mt-s">
+      {{ stars(d.rating) }}
+      <span class="small">₹{{ '{:,}'.format(d.budget_per_day) }}/day</span>
+    </div>
+    <div class="tags mt-s">
+      {% for a in d.activities.split(';')[:3] %}<span class="tag">{{ a }}</span>{% endfor %}
+    </div>
+  </div>
+</a>
+{% endmacro %}

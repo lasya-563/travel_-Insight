@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card with context %}
+{% block title %}Explore{% endblock %}
+{% block content %}
+<h1>Explore destinations</h1>
+<form class="filters card pad" method="get">
+  <input type="search" name="q" value="{{ q }}" placeholder="Search name, activity, keyword…" aria-label="Search">
+  <select name="category" aria-label="Category">
+    <option value="">All categories</option>
+    {% for c in CATEGORIES %}<option {% if c==category %}selected{% endif %}>{{ c }}</option>{% endfor %}
+  </select>
+  <select name="state" aria-label="State">
+    <option value="">All states</option>
+    {% for s in states %}<option {% if s==state %}selected{% endif %}>{{ s }}</option>{% endfor %}
+  </select>
+  <input type="number" name="max_budget" value="{{ max_budget }}" min="500" step="500" placeholder="Max ₹/day" aria-label="Max budget per day">
+  <select name="sort" aria-label="Sort">
+    {% for k, label in [('popularity','Most popular'),('rating','Top rated'),('budget','Lowest budget'),('name','Name A–Z')] %}
+      <option value="{{ k }}" {% if sort==k %}selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <button class="btn">Search</button>
+</form>
+<p class="muted">{{ total }} destination{{ '' if total==1 else 's' }} found</p>
+{% if items %}
+<div class="grid">{% for d in items %}{{ card(d) }}{% endfor %}</div>
+{% else %}
+<div class="card pad empty">No destinations match those filters. <a href="{{ url_for('views.explore') }}">Clear filters</a></div>
+{% endif %}
+{% if pages > 1 %}
+<nav class="pager">
+  {% if page > 1 %}<a class="btn btn-ghost btn-sm" href="{{ url_for('views.explore', page=page-1, **args) }}">← Prev</a>{% endif %}
+  <span>Page {{ page }} of {{ pages }}</span>
+  {% if page < pages %}<a class="btn btn-ghost btn-sm" href="{{ url_for('views.explore', page=page+1, **args) }}">Next →</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

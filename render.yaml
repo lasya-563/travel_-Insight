@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: travelinsight
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python manage.py init-db && gunicorn wsgi:app --workers 2 --threads 4 --timeout 60
+    healthCheckPath: /api/health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: COOKIE_SECURE
+        value: "1"
+      # Free instances have an ephemeral disk: the DB is re-seeded on restart.
+      # Attach a persistent disk and set DATABASE_PATH=/var/data/travelinsight.db to keep data.

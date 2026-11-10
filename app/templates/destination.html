@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ d.name }}{% endblock %}
+{% block content %}
+<a class="muted small" href="{{ url_for('views.explore') }}">← All destinations</a>
+<section class="detail">
+  <div class="detail-banner" style="--c: {{ COLORS[d.category] }}">
+    <span class="dest-icon big">{{ ICONS[d.category] }}</span>
+    <div>
+      <span class="chip chip-onc">{{ d.category }}</span>
+      <h1>{{ d.name }}</h1>
+      <div>{{ d.state }}</div>
+    </div>
+  </div>
+  <div class="detail-grid">
+    <div>
+      <p class="lead">{{ d.description }}</p>
+      <h3>Activities</h3>
+      <div class="tags">{% for a in d.activities.split(';') %}<span class="tag">{{ a }}</span>{% endfor %}</div>
+      {% if d.tags %}<h3>Known for</h3>
+      <div class="tags">{% for t in d.tags.split(';') %}<span class="tag tag-soft">{{ t }}</span>{% endfor %}</div>{% endif %}
+
+      <h3>Similar destinations <span class="muted small">(cosine similarity of feature vectors)</span></h3>
+      <div class="grid3">
+        {% for s in similar %}
+        <a class="card pad" href="{{ url_for('views.destination', dest_id=s.id) }}">
+          <b>{{ s.name }}</b><div class="muted small">{{ s.category }} · {{ s.state }}</div>
+          <div class="small mt-s">Similarity {{ '%.0f'|format(s.similarity*100) }}% · ★ {{ '%.1f'|format(s.rating) }}</div>
+        </a>{% endfor %}
+      </div>
+    </div>
+    <aside class="card pad facts">
+      <div class="fact"><span>Rating</span><b id="avg-rating">★ {{ '%.2f'|format(d.rating) }}</b></div>
+      <div class="fact"><span>Traveller ratings</span><b id="rating-count">{{ d.user_ratings }}</b></div>
+      <div class="fact"><span>Budget / person / day</span><b>₹{{ '{:,}'.format(d.budget_per_day) }}</b></div>
+      <div class="fact"><span>Best season</span><b>{{ d.best_season or '—' }}</b></div>
+      <div class="fact"><span>Page views</span><b>{{ d.views }}</b></div>
+      <hr>
+      {% if g.user %}
+        <div class="rate" data-id="{{ d.id }}" data-mine="{{ my_rating or 0 }}">
+          <span class="small">Your rating</span>
+          <div class="star-input" role="radiogroup" aria-label="Rate this destination">
+            {% for i in range(1,6) %}<button type="button" data-v="{{ i }}" aria-label="{{ i }} stars">★</button>{% endfor %}
+          </div>
+          <button class="btn btn-ghost btn-sm" id="save-btn" data-saved="{{ 1 if is_saved else 0 }}">{{ 'Saved ✓' if is_saved else 'Save for later' }}</button>
+          <p class="small muted" id="rate-msg"></p>
+        </div>
+      {% else %}
+        <p class="small"><a href="{{ url_for('auth.login', next=request.path) }}">Log in</a> to rate and save destinations — your ratings improve your recommendations.</p>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/destination.js') }}"></script>{% endblock %}

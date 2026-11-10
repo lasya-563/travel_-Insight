@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<h1>Hi, {{ g.user['name'] }}</h1>
+<div class="grid3">
+  <section class="card pad">
+    <h3>Your travel segment</h3>
+    {% if segment %}<p class="big">{{ segment.label }}</p>
+      <p class="small muted">Assigned by the K-Means model from your saved interests, budget and trip length.</p>
+    {% else %}<p class="muted">Save your preferences to see which visitor segment you belong to.</p>{% endif %}
+    <a class="btn btn-sm" href="{{ url_for('views.recommendations') }}">Edit preferences</a>
+  </section>
+  <section class="card pad">
+    <h3>Saved preferences</h3>
+    <p class="small"><b>Interests:</b> {{ prefs.interests|join(', ') or '—' }}</p>
+    <p class="small"><b>Activities:</b> {{ prefs.activities|join(', ') or '—' }}</p>
+    <p class="small"><b>Budget:</b> {{ ('₹{:,}/day'.format(prefs.budget)) if prefs.budget else 'No limit' }}
+      · <b>Min rating:</b> {{ prefs.min_rating }} · <b>Trip:</b> {{ prefs.trip_days }} days</p>
+  </section>
+  <section class="card pad">
+    <h3>Saved destinations</h3>
+    {% for s in saved %}<div><a href="{{ url_for('views.destination', dest_id=s.id) }}">{{ s.name }}</a> <span class="muted small">{{ s.category }}</span></div>
+    {% else %}<p class="muted small">Nothing saved yet.</p>{% endfor %}
+    <h3 class="mt">Your ratings</h3>
+    {% for r in rated %}<div><a href="{{ url_for('views.destination', dest_id=r.id) }}">{{ r.name }}</a> <span class="stars">{{ '★' * r.rating }}</span></div>
+    {% else %}<p class="muted small">No ratings yet.</p>{% endfor %}
+  </section>
+</div>
+{% endblock %}

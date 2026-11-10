@@ -1,0 +1,1 @@
+web: python manage.py init-db && gunicorn wsgi:app --workers 2 --threads 4 --timeout 60 --bind 0.0.0.0:${PORT:-8000}

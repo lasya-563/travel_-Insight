@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% from "_macros.html" import card with context %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">Smart tourism analytics &amp; visitor intelligence</p>
+    <h1>Find the destinations that fit <em>you</em> — and see what travellers are choosing.</h1>
+    <p class="lead">Tell us your interests, activities and budget. TravelInsight ranks places with content-based
+      filtering and cosine similarity, groups similar visitors with K-Means, and shows live tourism trends.</p>
+    <div class="row gap">
+      <a class="btn" href="{{ url_for('views.recommendations') }}">Get recommendations</a>
+      <a class="btn btn-ghost" href="{{ url_for('views.dashboard') }}">Open analytics dashboard</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div><b>{{ stats.destinations }}</b><span>destinations</span></div>
+    <div><b>{{ stats.states }}</b><span>states &amp; UTs</span></div>
+    <div><b>{{ stats.categories }}</b><span>travel categories</span></div>
+  </div>
+</section>
+
+<section>
+  <div class="row between"><h2>Trending right now</h2><a href="{{ url_for('views.explore') }}">Browse all →</a></div>
+  <div class="grid">{% for d in featured %}{{ card(d) }}{% endfor %}</div>
+</section>
+
+<section class="how">
+  <h2>How it works</h2>
+  <div class="grid3">
+    <div class="card pad"><h3>1 · Preferences</h3><p>Choose interests, activities, budget and a minimum rating.</p></div>
+    <div class="card pad"><h3>2 · Recommend</h3><p>Destination features and your profile become TF-IDF vectors; cosine similarity ranks the matches and explains why.</p></div>
+    <div class="card pad"><h3>3 · Segment &amp; analyse</h3><p>K-Means groups similar visitors; the dashboard updates as people view, rate and save places.</p></div>
+  </div>
+</section>
+{% endblock %}
